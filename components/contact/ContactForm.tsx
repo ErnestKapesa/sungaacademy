@@ -2,17 +2,48 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, type FormEvent } from "react";
-import { Send, LoaderCircle, CircleCheck, AlertCircle } from "lucide-react";
 import clsx from "clsx";
+import { Arrow } from "@/components/ui/Buttons";
+import { easeOut } from "@/components/ui/motion";
 
 const roles = ["Parent/Guardian", "Prospective Partner/Donor", "Other"] as const;
-
 type Status = "idle" | "sending" | "sent" | "error";
 
-const field =
-  "peer w-full rounded-2xl border border-navy-900/15 bg-white px-4 pb-2.5 pt-6 text-navy-900 outline-none transition placeholder-transparent focus:border-gold-500 focus:ring-4 focus:ring-gold-400/20";
-const label =
-  "pointer-events-none absolute left-4 top-2 text-xs font-medium text-navy-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-xs peer-focus:text-gold-700";
+function Field({
+  id,
+  label,
+  type = "text",
+  required,
+  autoComplete,
+  textarea,
+}: {
+  id: string;
+  label: string;
+  type?: string;
+  required?: boolean;
+  autoComplete?: string;
+  textarea?: boolean;
+}) {
+  const cls =
+    "peer block w-full resize-none border-0 border-b border-line bg-transparent px-0 pb-3 pt-7 text-xl text-ink outline-none transition-colors placeholder-transparent focus:border-ink";
+  return (
+    <div className="relative">
+      {textarea ? (
+        <textarea id={id} name={id} rows={4} required={required} placeholder={label} className={cls} />
+      ) : (
+        <input id={id} name={id} type={type} required={required} autoComplete={autoComplete} placeholder={label} className={cls} />
+      )}
+      <label
+        htmlFor={id}
+        className="label pointer-events-none absolute left-0 top-1 text-ink-mute transition-all duration-300 peer-placeholder-shown:top-7 peer-placeholder-shown:text-xl peer-placeholder-shown:normal-case peer-placeholder-shown:tracking-normal peer-focus:top-1 peer-focus:text-[0.7rem] peer-focus:uppercase peer-focus:tracking-[0.16em]"
+      >
+        {label}
+        {required && " *"}
+      </label>
+      <span className="absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 bg-ink transition-transform duration-700 ease-out-expo peer-focus:scale-x-100" />
+    </div>
+  );
+}
 
 export function ContactForm() {
   const [role, setRole] = useState<(typeof roles)[number]>("Parent/Guardian");
@@ -42,150 +73,97 @@ export function ContactForm() {
   }
 
   return (
-    <div className="relative">
-      <AnimatePresence mode="wait">
-        {status === "sent" ? (
-          <motion.div
-            key="sent"
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            className="flex min-h-[28rem] flex-col items-center justify-center text-center"
-            role="status"
+    <AnimatePresence mode="wait">
+      {status === "sent" ? (
+        <motion.div
+          key="sent"
+          role="status"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8, ease: easeOut }}
+          className="border-t border-ink pt-10"
+        >
+          <p className="display-md">
+            Thank you — <em>we’ll be in touch.</em>
+          </p>
+          <p className="mt-6 max-w-md text-lg text-ink-soft">
+            Your message has reached the school office. We’ll get back to you with details on availability, fees and
+            the enrollment process.
+          </p>
+          <button
+            type="button"
+            onClick={() => setStatus("idle")}
+            className="mt-10 border-b border-ink pb-0.5 font-medium"
           >
-            <motion.span
-              initial={{ scale: 0, rotate: -45 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ type: "spring", stiffness: 220, damping: 14, delay: 0.1 }}
-              className="flex size-20 items-center justify-center rounded-full bg-gold-400 text-navy-950"
-            >
-              <CircleCheck className="size-10" />
-            </motion.span>
-            <h3 className="mt-6 text-3xl font-semibold text-navy-900">Thank you!</h3>
-            <p className="mt-3 max-w-sm text-navy-700">
-              Your message has been received. Our team will get back to you soon with details on availability, fees, and
-              the enrollment process.
+            Send another message
+          </button>
+        </motion.div>
+      ) : (
+        <motion.form
+          key="form"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onSubmit={onSubmit}
+          className="grid gap-x-8 gap-y-6 sm:grid-cols-2"
+        >
+          <div className="sm:col-span-2">
+            <Field id="name" label="Full name" required autoComplete="name" />
+          </div>
+          <Field id="phone" label="Phone number" type="tel" required autoComplete="tel" />
+          <Field id="email" label="Email address" type="email" autoComplete="email" />
+
+          <fieldset className="pt-4 sm:col-span-2">
+            <legend className="label text-ink-mute">I am a</legend>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {roles.map((r) => (
+                <label
+                  key={r}
+                  className={clsx(
+                    "cursor-pointer rounded-full px-4 py-2 text-[0.95rem] ring-1 ring-inset transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink",
+                    role === r ? "bg-ink text-paper ring-ink" : "text-ink ring-ink/25 hover:ring-ink",
+                  )}
+                >
+                  <input
+                    type="radio"
+                    name="roleChoice"
+                    value={r}
+                    checked={role === r}
+                    onChange={() => setRole(r)}
+                    className="sr-only"
+                  />
+                  {r}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <div className="sm:col-span-2">
+            <Field id="message" label="Message" required textarea />
+          </div>
+
+          {status === "error" && (
+            <p role="alert" className="text-sm text-red-700 sm:col-span-2">
+              {error}
             </p>
+          )}
+
+          <div className="flex flex-wrap items-center justify-between gap-6 pt-4 sm:col-span-2">
+            <p className="text-sm text-ink-mute">* Required</p>
             <button
-              type="button"
-              onClick={() => setStatus("idle")}
-              className="mt-8 rounded-full border border-navy-900/20 px-6 py-3 text-sm font-semibold text-navy-900 transition hover:bg-navy-900 hover:text-white"
+              type="submit"
+              disabled={status === "sending"}
+              className="group inline-flex h-14 items-center gap-4 rounded-full bg-ink pl-7 pr-2 font-medium text-paper disabled:opacity-60"
             >
-              Send another message
+              {status === "sending" ? "Sending…" : "Send message"}
+              <span className="flex size-10 items-center justify-center rounded-full bg-paper/12 transition-transform duration-500 ease-out-expo group-hover:-rotate-45">
+                <Arrow />
+              </span>
             </button>
-          </motion.div>
-        ) : (
-          <motion.form
-            key="form"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onSubmit={onSubmit}
-            className="grid gap-4 sm:grid-cols-2"
-            noValidate={false}
-          >
-            <div className="relative sm:col-span-2">
-              <input id="name" name="name" required autoComplete="name" placeholder="Full Name" className={field} />
-              <label htmlFor="name" className={label}>
-                Full Name
-              </label>
-            </div>
-            <div className="relative">
-              <input
-                id="phone"
-                name="phone"
-                type="tel"
-                required
-                autoComplete="tel"
-                placeholder="Phone Number"
-                className={field}
-              />
-              <label htmlFor="phone" className={label}>
-                Phone Number
-              </label>
-            </div>
-            <div className="relative">
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                placeholder="Email Address"
-                className={field}
-              />
-              <label htmlFor="email" className={label}>
-                Email Address
-              </label>
-            </div>
-
-            <fieldset className="sm:col-span-2">
-              <legend className="mb-3 text-sm font-medium text-navy-700">I am a:</legend>
-              <div className="flex flex-wrap gap-2">
-                {roles.map((r) => (
-                  <label
-                    key={r}
-                    className={clsx(
-                      "relative cursor-pointer rounded-full border px-4 py-2 text-sm font-medium transition has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-gold-400/40",
-                      role === r
-                        ? "border-navy-900 bg-navy-900 text-white"
-                        : "border-navy-900/15 bg-white text-navy-800 hover:border-navy-900/40",
-                    )}
-                  >
-                    <input
-                      type="radio"
-                      name="roleChoice"
-                      value={r}
-                      checked={role === r}
-                      onChange={() => setRole(r)}
-                      className="sr-only"
-                    />
-                    {r}
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-
-            <div className="relative sm:col-span-2">
-              <textarea
-                id="message"
-                name="message"
-                required
-                rows={5}
-                placeholder="Message"
-                className={clsx(field, "resize-none")}
-              />
-              <label htmlFor="message" className={label}>
-                Message
-              </label>
-            </div>
-
-            {status === "error" && (
-              <p role="alert" className="flex items-center gap-2 text-sm text-red-600 sm:col-span-2">
-                <AlertCircle className="size-4" /> {error}
-              </p>
-            )}
-
-            <div className="sm:col-span-2">
-              <button
-                type="submit"
-                disabled={status === "sending"}
-                className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-navy-900 px-8 py-4 font-semibold text-white shadow-lg shadow-navy-900/20 transition hover:bg-navy-700 disabled:opacity-70 sm:w-auto"
-              >
-                {status === "sending" ? (
-                  <>
-                    <LoaderCircle className="size-5 animate-spin" /> Sending…
-                  </>
-                ) : (
-                  <>
-                    Submit
-                    <Send className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                  </>
-                )}
-              </button>
-            </div>
-          </motion.form>
-        )}
-      </AnimatePresence>
-    </div>
+          </div>
+        </motion.form>
+      )}
+    </AnimatePresence>
   );
 }

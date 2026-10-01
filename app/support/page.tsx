@@ -1,236 +1,127 @@
 import type { Metadata } from "next";
-import {
-  Building2,
-  Tractor,
-  BedDouble,
-  GraduationCap,
-  Languages,
-  PlaneTakeoff,
-  Laptop,
-  HandCoins,
-  School,
-  Package,
-  Megaphone,
-  LandPlot,
-  Landmark,
-} from "lucide-react";
-import { PageHero } from "@/components/PageHero";
-import { Reveal, Stagger, StaggerItem } from "@/components/motion";
-import { SectionHeading } from "@/components/SectionHeading";
-import { MediaPlaceholder } from "@/components/MediaPlaceholder";
-import { Button } from "@/components/Button";
-import { CtaBand } from "@/components/CtaBand";
+import { PageHeader } from "@/components/sections/PageHeader";
+import { LinkRows } from "@/components/sections/LinkRows";
+import { ProjectList } from "@/components/sections/ProjectList";
+import { Media } from "@/components/ui/Media";
+import { SectionIndex } from "@/components/ui/Section";
+import { Reveal, ScrollText, SplitText } from "@/components/ui/motion";
 
 export const metadata: Metadata = {
   title: "Support Us / Partners",
   description:
-    "Partner with Sunga Academy to build new classrooms, a school farm, a boarding house and a Grade 8–12 program for learners in Zambia.",
+    "Partner with Sunga Academy to build new classrooms, a school farm, a boarding house and a Grade 8–12 programme for learners in Zambia.",
 };
 
 const projects = [
-  {
-    icon: Building2,
-    title: "New classroom blocks",
-    text: "Additional classrooms and upgraded facilities so we can welcome more learners.",
-    span: "lg:col-span-2",
-  },
-  {
-    icon: GraduationCap,
-    title: "Grades 8–12 facilities",
-    text: "Specialist rooms and resources to extend our curriculum through secondary school.",
-  },
-  {
-    icon: Tractor,
-    title: "School farm",
-    text: "Hands-on agricultural learning that also supports sustainability and school meals.",
-  },
-  {
-    icon: BedDouble,
-    title: "Boarding house",
-    text: "Safe, supervised boarding so learners from further afield can attend.",
-  },
-  {
-    icon: Languages,
-    title: "Languages program",
-    text: "Introducing French and other additional languages to our curriculum.",
-  },
-  {
-    icon: PlaneTakeoff,
-    title: "International exchange",
-    text: "Teacher and student exchange partnerships with schools abroad.",
-  },
-  {
-    icon: Laptop,
-    title: "Digital learning",
-    text: "Devices and connectivity, including programs like Google for Education.",
-  },
+  { title: "New classroom blocks", text: "Additional classrooms and upgraded facilities so we can welcome more learners.", tone: "clay" as const },
+  { title: "Grades 8–12 facilities", text: "Specialist rooms and resources to extend our curriculum through secondary school.", tone: "sand" as const },
+  { title: "School farm", text: "Hands-on agricultural learning that also supports sustainability.", tone: "sage" as const },
+  { title: "Boarding house", text: "Safe, supervised boarding so learners from further afield can attend.", tone: "dusk" as const },
+  { title: "Languages programme", text: "Introducing French and other additional languages to our curriculum.", tone: "sand" as const },
+  { title: "International exchange", text: "Teacher and student exchange partnerships with schools abroad.", tone: "clay" as const },
+  { title: "Digital learning", text: "Devices and connectivity, including programmes like Google for Education.", tone: "sage" as const },
 ];
 
 const ways = [
-  {
-    icon: HandCoins,
-    title: "Donate",
-    text: "Contribute towards a specific project or our general growth fund.",
-  },
-  {
-    icon: School,
-    title: "Partner school",
-    text: "Build a teacher or student exchange relationship with our learners.",
-  },
-  {
-    icon: Package,
-    title: "In-kind support",
-    text: "Books, furniture, equipment, building materials or farm inputs.",
-  },
-  {
-    icon: Megaphone,
-    title: "Spread the word",
-    text: "Share our story with your network, church, company or foundation.",
-  },
+  { title: "Donate", text: "Contribute towards a specific project or our general growth fund." },
+  { title: "Partner school", text: "Build a teacher or student exchange relationship with our learners." },
+  { title: "In-kind support", text: "Books, furniture, equipment, building materials or farm inputs." },
+  { title: "Spread the word", text: "Share our story with your network, church, company or foundation." },
 ];
 
 export default function SupportPage() {
   return (
     <>
-      <PageHero
+      <PageHeader
         crumb="Support Us"
-        eyebrow="Support Us / Partners"
-        title={
-          <>
-            Help us grow from Grade 7 <em className="text-gold-400">to Grade 12.</em>
-          </>
-        }
-        intro="We welcome partnerships with organizations, donors, and international schools who share our belief that every child deserves quality education in a stable, caring environment."
-      >
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <Button href="/contact#enroll" arrow>
-            Become a partner
-          </Button>
-          <Button href="#projects" variant="outline-light">
-            See our projects
-          </Button>
-        </div>
-      </PageHero>
+        aside="Partners · Donors · Schools"
+        title="Help us grow from Grade 7 to *Grade 12.*"
+        intro="We welcome partnerships with organisations, donors, and international schools who share our belief that every child deserves quality education in a stable, caring environment."
+      />
 
-      {/* Why it matters */}
-      <section className="container-x py-24 sm:py-32">
-        <div className="grid items-center gap-16 lg:grid-cols-2">
-          <div>
-            <SectionHeading
-              eyebrow="Why partner with Sunga Academy"
-              title="A secure foundation for long-term impact"
-            />
-            <Reveal delay={0.1} className="mt-6 space-y-5 text-lg leading-relaxed text-navy-700/85">
-              <p>
-                Because Sunga Academy sits on our own permanent, title-deeded land, every investment in our campus is
-                an investment that lasts. Your support goes directly into infrastructure and programs that will serve
-                learners for generations.
-              </p>
-              <p>
-                We currently serve learners from Baby Class through Grade 7, and are ready to take the next step:
-                extending through to Grade 12 with the facilities, curriculum and partnerships to match.
-              </p>
-            </Reveal>
-            <Stagger className="mt-10 grid grid-cols-2 gap-4">
-              <StaggerItem className="rounded-3xl bg-white p-6 ring-1 ring-navy-900/5">
-                <LandPlot className="size-6 text-gold-600" />
-                <p className="mt-3 font-display text-2xl font-semibold text-navy-900">Title-deeded</p>
-                <p className="text-sm text-navy-600">permanent campus</p>
-              </StaggerItem>
-              <StaggerItem className="rounded-3xl bg-white p-6 ring-1 ring-navy-900/5">
-                <Landmark className="size-6 text-gold-600" />
-                <p className="mt-3 font-display text-2xl font-semibold text-navy-900">[Registration]</p>
-                <p className="text-sm text-navy-600">[Add registration / NGO number]</p>
-              </StaggerItem>
-            </Stagger>
-          </div>
-          <Reveal delay={0.1} className="aspect-[4/5] sm:aspect-[4/3] lg:aspect-[4/5]">
-            <MediaPlaceholder type="video" tone="dark" label="Short appeal video from the school leadership" />
+      <Media kind="film" tone="dusk" label="A short appeal from the school leadership" className="aspect-[4/3] sm:aspect-[21/9]" sizes="100vw" />
+
+      {/* 01 — Why */}
+      <section className="wrap py-24 sm:py-36">
+        <SectionIndex index="01" label="Why partner with us" />
+        <ScrollText
+          className="display-md mt-10 max-w-6xl"
+          text="Because Sunga Academy sits on its own permanent, title-deeded land, every investment in our campus is an investment that lasts — serving learners for generations."
+        />
+        <div className="mt-16 grid gap-10 border-t border-line pt-10 md:grid-cols-3">
+          <Reveal>
+            <p className="label text-ink-mute">Today</p>
+            <p className="mt-4 font-serif text-3xl">Baby Class to Grade 7</p>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <p className="label text-ink-mute">Next</p>
+            <p className="mt-4 font-serif text-3xl">Through to Grade 12</p>
+          </Reveal>
+          <Reveal delay={0.16}>
+            <p className="label text-ink-mute">Registration</p>
+            <p className="mt-4 font-serif text-3xl">[Registration / NGO number]</p>
           </Reveal>
         </div>
       </section>
 
-      {/* Projects */}
-      <section id="projects" className="relative scroll-mt-20 overflow-hidden bg-navy-900 py-24 text-white sm:py-32">
-        <div className="grain pointer-events-none absolute inset-0" />
-        <div className="pointer-events-none absolute -right-40 top-1/3 size-[32rem] rounded-full bg-gold-400/10 blur-3xl" />
-        <div className="container-x relative">
-          <SectionHeading
-            light
-            eyebrow="Projects you can support"
-            title="Where your support goes"
-            intro="Each project brings us closer to becoming a full Baby Class to Grade 12 institution."
-          />
-          <Stagger className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" stagger={0.08}>
-            {projects.map(({ icon: Icon, title, text, span }) => (
-              <StaggerItem
-                key={title}
-                className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-8 transition-all duration-500 hover:border-gold-400/50 hover:bg-white/[0.08] ${span ?? ""}`}
-              >
-                <div className="pointer-events-none absolute -right-10 -top-10 size-40 rounded-full bg-gold-400/0 blur-2xl transition-colors duration-700 group-hover:bg-gold-400/20" />
-                <Icon className="relative size-9 text-gold-400 transition-transform duration-500 group-hover:-translate-y-1" />
-                <h3 className="relative mt-8 text-2xl font-semibold">{title}</h3>
-                <p className="relative mt-3 leading-relaxed text-navy-200">{text}</p>
-                <p className="relative mt-6 text-xs uppercase tracking-[0.16em] text-gold-300/80">
-                  Goal: [amount] · Status: [planning]
-                </p>
-              </StaggerItem>
-            ))}
-          </Stagger>
+      {/* 02 — Projects */}
+      <section id="projects" className="scroll-mt-20 bg-ink py-24 text-paper sm:py-36">
+        <div className="wrap">
+          <SectionIndex index="02" label="Projects you can support" light aside={<span>Hover to preview</span>} />
+          <SplitText as="h2" className="display-lg mt-10 max-w-4xl" text="Where your support *goes.*" />
+          <div className="mt-16">
+            <ProjectList projects={projects} />
+          </div>
         </div>
       </section>
 
-      {/* Ways to help */}
-      <section className="container-x py-24 sm:py-32">
-        <SectionHeading align="center" eyebrow="Ways to help" title="Every contribution builds a brighter future" />
-        <Stagger className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {ways.map(({ icon: Icon, title, text }, i) => (
-            <StaggerItem
-              key={title}
-              className="group rounded-3xl bg-white p-8 text-center shadow-sm ring-1 ring-navy-900/5 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-navy-900/10"
-            >
-              <span className="mx-auto flex size-16 items-center justify-center rounded-full bg-gold-400/15 text-gold-700 transition-all duration-500 group-hover:scale-110 group-hover:bg-gold-400 group-hover:text-navy-950">
-                <Icon className="size-7" />
-              </span>
-              <p className="mt-2 font-display text-sm text-navy-300">0{i + 1}</p>
-              <h3 className="mt-3 text-xl font-semibold text-navy-900">{title}</h3>
-              <p className="mt-3 leading-relaxed text-navy-700/80">{text}</p>
-            </StaggerItem>
+      {/* 03 — Ways to help */}
+      <section className="wrap py-24 sm:py-36">
+        <SectionIndex index="03" label="Ways to help" />
+        <SplitText as="h2" className="display-lg mt-10 max-w-4xl" text="Every contribution builds a *brighter* future." />
+        <div className="mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+          {ways.map((w, i) => (
+            <Reveal key={w.title} delay={i * 0.08} className="border-t border-ink pt-6">
+              <p className="label text-ink-mute">0{i + 1}</p>
+              <h3 className="mt-10 text-3xl">{w.title}</h3>
+              <p className="mt-3 text-lg leading-relaxed text-ink-soft">{w.text}</p>
+            </Reveal>
           ))}
-        </Stagger>
+        </div>
 
-        <Reveal className="mx-auto mt-16 max-w-3xl rounded-3xl border-2 border-dashed border-navy-900/15 bg-white p-8 text-center">
-          <p className="eyebrow justify-center">Donation details</p>
-          <p className="mt-4 text-navy-700">
-            [Add bank transfer / mobile money details, or a link to an online donation platform, here.]
+        <Reveal className="mt-20 grid gap-6 bg-paper-2 p-8 sm:p-12 lg:grid-cols-12">
+          <p className="label text-ink-mute lg:col-span-3">Donation details</p>
+          <p className="font-serif text-2xl leading-snug lg:col-span-9">
+            [Bank transfer and mobile money details, or a link to an online donation platform.]
           </p>
         </Reveal>
       </section>
 
-      {/* Partners logos */}
-      <section className="bg-white py-20">
-        <div className="container-x">
-          <Reveal className="text-center">
-            <p className="eyebrow justify-center">Our partners & friends</p>
-          </Reveal>
-          <Stagger className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6" stagger={0.06}>
-            {Array.from({ length: 6 }).map((_, i) => (
-              <StaggerItem
-                key={i}
-                className="flex h-20 items-center justify-center rounded-2xl border border-dashed border-navy-900/15 text-xs font-semibold uppercase tracking-[0.14em] text-navy-400"
-              >
-                Partner logo
-              </StaggerItem>
-            ))}
-          </Stagger>
-        </div>
+      {/* 04 — Partners */}
+      <section className="wrap pb-24 sm:pb-36">
+        <SectionIndex index="04" label="Partners & friends" />
+        <ul className="mt-10 grid grid-cols-2 border-l border-t border-line sm:grid-cols-3 lg:grid-cols-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <li key={i} className="flex h-32 items-center justify-center border-b border-r border-line">
+              <span className="label text-ink-mute/70">Partner logo</span>
+            </li>
+          ))}
+        </ul>
       </section>
 
-      <CtaBand
-        title="Let's build the future of Sunga Academy together."
-        text="Get in touch to discuss partnership, sponsorship or exchange opportunities. We'd be glad to share our plans in detail."
-        showSupport={false}
-      />
+      <section className="bg-paper-2 py-24 sm:py-32">
+        <div className="wrap">
+          <SplitText as="h2" className="display-lg max-w-5xl" text="Let’s build the future of *Sunga Academy* together." />
+          <div className="mt-16">
+            <LinkRows
+              rows={[
+                { href: "/contact#enroll", title: "Become a partner", note: "Partnership, sponsorship or exchange" },
+                { href: "/about", title: "Read our story", note: "Mission, vision and values" },
+              ]}
+            />
+          </div>
+        </div>
+      </section>
     </>
   );
 }
